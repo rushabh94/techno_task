@@ -1,6 +1,7 @@
 const { Sequelize } = require("sequelize");
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/sequelize.config");
+const UserInfo = require("./user_info");
 const { UUID, STRING, BOOLEAN, TEXT } = DataTypes;
 const TaskDetails = sequelize.define(
   "task_details",
@@ -37,6 +38,13 @@ const TaskDetails = sequelize.define(
       type: BOOLEAN,
       allowNull: true,
       defaultValue: false,
+    },
+    user_id: {
+      type: UUID,
+      references: {
+        model: UserInfo,
+        key: "user_id",
+      },
     },
   },
   {

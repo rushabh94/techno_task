@@ -77,9 +77,10 @@ const verifyToken = async (request, response, next) => {
       );
 
     const decoded = jwt.verify(bearerToken, process.env.JWTKEY);
-    req.user = decoded.user;
+    request.user = decoded.user;
     next();
   } catch (error) {
+    console.log(error);
     createResponse(response, 401, {}, "Token is not valid");
   }
 };
