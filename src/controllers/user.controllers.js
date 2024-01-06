@@ -5,6 +5,7 @@ const {
   decryptedString,
   generateToken,
 } = require("../utils/commonUtils");
+const jwt = require("jsonwebtoken");
 
 const createUser = async (request, response) => {
   const userInstance = await UserInfo.findOne({
@@ -52,4 +53,35 @@ const loginUser = async (request, response) => {
   );
 };
 
-module.exports = { createUser, loginUser };
+const verifyToken = async (request, response, next) => {
+  try {
+    if (!Object.keys(request.headers).includes("authorization")) {
+      return createResponse(
+        response,
+        403,
+        {},
+        "No token, authorization denied"
+      );
+    }
+
+    const beareHeader = request.headers["authorization"];
+    const bearer = beareHeader?.split(" ");
+    const bearerToken = bearer[1];
+
+    if (!bearerToken)
+      return createResponse(
+        response,
+        403,
+        {},
+        "No token, authorization denied"
+      );
+
+    const decoded = jwt.verify(bearerToken, process.env.JWTKEY);
+    req.user = decoded.user;
+    next();
+  } catch (error) {
+    createResponse(response, 401, {}, "Token is not valid");
+  }
+};
+
+module.exports = { createUser, loginUser, verifyToken };

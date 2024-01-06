@@ -6,6 +6,8 @@ const createResponse = (response, statusCode, data, message) => {
     200: "Success",
     400: "Bad request",
     404: "Not found",
+    401: "Unauthorized",
+    403: "Forbidden",
   };
 
   if (!message && statusCode) {
